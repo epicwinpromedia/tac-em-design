@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TacEm Design Demo | Semantic HTML vs Div Soup: A Tale of Two Approaches</title>
+
+<link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/styles/default.min.css">
+<script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
+
+<!-- and it's easy to individually load additional languages -->
+<script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/languages/go.min.js"></script>
+
+<script>// hljs.highlightAll(); // uncomment to enable</script>
+
+
+
+    <style>
+
+
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Expletus+Sans:ital,wght@0,400..700;1,400..700&family=Permanent+Marker&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Special+Elite&family=Teko:wght@300..700&family=Orbitron:wght@400;700&display=swap');
+
+/* Modern, minimal defaults */
+:root {
+
+
+/*-- Web Standard Setting Attrs --*/
+
+   font-size: var(--txt-size, var(--f-size, 16pt));
+   font-family: var(--txt-font);
+   line-height: 1.15;
+   color-scheme: dark light;
+   accent-color: var(--acc);
+   --trans-time: .3s;
+   --pulse: .3;
+   --pulse-t: .3s;
+
+
+
+   /* Font */
+   --f-size: 16pt;
+   --h-font: 'Audiowide', Sans-Serif;
+   --h-alt-font: 'Orbitron', Sans-Serif;
+   --txt-font: 'Special Elite', Serif;
+   --txt-slab: 'Teko', slab;
+   --txt-mono: 'Space Mono', Monospace;
+   --txt-alt:'Expletus Sans', Sans-Serif;
+   --txt-serif: 'Bodoni Moda' Serif;
+   --txt-hand:'Permanent Marker', Cursive;
+   --h-font-alt: 'Orbitron', Sans-Serif;
+   --e-font: Noto Color, Emoji;
+
+
+
+   --bg: light-dark(var(--lgt), var(--drk));
+   --bg-alt: light-dark(var(--lgtr), var(--drkr));
+   --txt: light-dark(var(--drk), var(--lgt));
+   --txt-alt: light-dark(var(--drkr), var(--lgtr));
+
+   --spacing: clamp(.75rem, 5vw, 2rem);
+   --txt-shad: .5px .5px .25px light-dark(var(--drk-ish), var(--lgt-ish)), -.5px -.5px .25px light-dark(var(--lgt-ish), var(--drk-ish));
+
+   --h: var(--acc);
+   --txt-font: 'Special Elite', sans-serif;
+   --txt-size: clamp(1rem, 4vw, 2rem);
+   --highlight-txt: var(--txt-alt);
+   --highlight-bg: var(--surface-alt);
+
+
+/*  -- Indig Brand Colors -- */
+   --neon-cyan: #0ff;
+   --neon-purps: #8a2be2;
+   --neon-green: #0f0;
+   --neon-blue: #0000ff;
+   --neon-mgnta: #c700c7;
+
+   --neon-cyan-ish: rgba(0, 253, 253, 0.86);
+   --neon-purps-ish: rgba(138, 42, 227, 0.86);
+   --neon-green-ish: rgba(0, 242, 0, 0.86);
+   --neon-blue-ish: rgba(0, 0, 242, 0.86);
+   --neon-cyan-ish: rgba(138, 0, 138, 0.86);
+
+/* --- w/part. transparency --- */
+   --drk-cyan-ish: rgba(0,121,212,calc(clamp(.27, calc((var(--pulse) + .08) / 3), .83) - .11));
+   --neon-cyan-ish: rgba(0, 253, 253, calc(clamp(.23, calc(var(--pulse) /3), .62) + .38));
+   --neon-purps-ish: rgba(138, 42, 227, calc(clamp(.33, calc(var(--pulse) /2), .73) + .33));
+   --neon-green-ish: rgba(0, 242, 0, calc(clamp(.38, calc(var(--pulse) /2), .62) + .27));
+   --neon-blue-ish: rgba(0, 0, 242, calc(clamp(.37, calc(var(--pulse) /3), .82) - .27));
+   --neon-mgnta-ish: rgba(202, 0, 202, calc(clamp(.23, calc(var(--pulse) /2), .88) + .11));
+
+
+/* -- Colors Util Colors -- */
+
+   /* GreyTones */
+   --wht: #e3e0e7;
+   --wht-ish: rgba(242, 242, 242, 0.86);
+   --blk: #131017;
+   --blk-ish: rgba(27, 27, 27, 0.94);
+
+
+   --drkr: #002;
+   --lgtr: #fed;
+   --lgt-ish: rgba(242,242,242,0.5)
+   --drk-ish: rgba(0,0,0,0.5);
+   --lgt: #ccc;
+   --drk: #333;
+   --mid: #88888888;
+   --mid-drk: #55555599;
+   --mid-lgt: #aaaaaa99;
+   --drk-mid: #77777799;
+   --lgt-mid: #bbbbbb99;
+   --pri: #00ddcc99;
+   --sec: #b500b599;
+   --ter: #73198399
+   --pri-ish: rgba(0, 222, 202, 0.88);
+   --sec-ish: rgba(222, 0, 202, 0.88);
+   --acc: light-dark(var(--sec), var(--pri));
+   --acc-alt: light-dark(var(--pri), var(--sec));
+
+
+/* --- Cust Tgl Styles --- */
+   --acc-minus: var(--sec);
+   --acc-plus: var(--pri);
+   --acc-null: var(--ter);
+
+
+
+/* Typography Scale */
+   --ratio: 1.618;
+   --base-size: clamp(1rem, 1.618vw, 1.5rem);
+   --h1: calc(var(--base-size) * var(--ratio) * var(--ratio) * var(--ratio));
+   --h2: calc(var(--base-size) * var(--ratio) * var(--ratio));
+   --h3: calc(var(--base-size) * var(--ratio));
+   --small: calc(var(--base-size) / var(--ratio));
+
+
+/* Vertical Rhythm */
+   --rhythm: calc(var(--measure) + (1.5 * var(--base-size)));
+   --spacing-xs: calc(var(--rhythm) * 0.25);
+   --spacing-sm: calc(var--rhythm) * 0.5);
+   --spacing-md: var(--rhythm);
+   --spacing-lg: calc(var(--rhythm) * 2);
+   --spacing-xl: calc(var(--rhythm) * 4);
+
+
+/* Layout */
+   --measure: 73ch;
+   --nav-width: min(42%, 300px);
+   --frame-width: var(--spacing-sm);
+   --frame-color: var(--txt);
+
+
+   --grey-drk-bor: .33rem ridge var(--drk);
+ 
+
+   --drop: drop-shadow(2px 2px 7px var(--grey3));
+   --brgt: saturate(120%) brightness(110%) contrast(115%);
+
+
+/*-- Border Setting Attributes. --*/
+   --bor: 3px ridge var(--acc);
+   --alt-bor: 3px ridge light-dark(var(--drk), var(--lgt));
+   --bor-trns: 3px ridge transparent;
+
+   --bor-grad: linear-gradient(45deg, var(--neon-#00bbcc99), var(--neon-green), var(--neon-purps), var(--neon-blue) 1);
+
+   --dub-brdr: 3px double light-dark(var(--drk, #383838e0), var(--lgt, #cccccce0));
+   --brdr: 3px solid light-dark(var(--drk, #383838e0), var(--lgt, #cccccce0));
+   --btn-brbr: 3px outset light-dark(var(--drk, #383838e0), var(--lgt, #cccccce0));
+   --btn-brdr-alt: 3px inset light-dark(var(--drk, #383838e0), var(--lgt, #cccccce0));
+
+
+/* -- Gradients -- */
+
+   --g: radial-gradient(circle, rgba(181, 0, 181, .88) 017%, rgba(51, 221, 204, .88) 42%, rgba(115, 55, 183, .88) 88%), linear-gradient(42deg, rgba(181, 0, 181, 0.77) 017%, rgba(51, 221, 204, 0.83) 62%, rgba(115, 55, 183, 0.88) 88%);
+   --g-lin: linear-gradient(73deg, rgba(2,0,36,.73) 0%, rgba(202, 202, 202, 0.53) 62%, rgba(88, 83, 88, 0.73) 100%);
+   --g-rad: radial-gradient(circle, rgba(115,115,115,0.42) 0%, rgba(55,55,55,0.83) 100%), linear-gradient(108deg, rgba(47, 47, 47, 0.83) 23%, rgba(57, 57, 57, 0.53) 38%, rgba(47, 47, 47, 0.77) 47%, rgba(33, 33, 33, 0.96) 69%), repeating-radial-gradient(circle, rgba(37, 37, 37, 0.83) 3%, rgba(73, 73, 73, 0.37) 7%), radial-gradient(circle, rgba(72, 43, 129, .88) 8%, rgba(72, 63, 129, .88) 20%, rgba(25, 128, 145, .88) 53%, rgba(2, 0, 36, .88) 73%);
+   --g-clrs: linear-gradient(42deg, transparent, #b500b588, #73198388, #0000ff83, #00ffff88, #00833883, transparent);
+   --g-con: conic-gradient(rgba(2, 0, 36, 0.7) 0.1%, rgba(120, 236, 255, 0.73) 33%, rgba(88, 40, 182, 0.73) 66%, rgba(2, 0, 36, 0.73) 99.9%);
+   --rad-mask: radial-gradient(ellipse at center, rgba(242, 242, 242, 0.42), rgba(0, 0, 0, .88));
+
+   --rnbw-grad: repeating-radial-gradient(rgba(0, 0, 0, .75) 10%, rgba(255, 255, 255, .25) 20%, rgba(0, 0, 0, .75) 30%), repeating-radial-gradient(#ff000099 25%, #00ff0099 50%, #0000ff99 75%, #aa00aa99 100%);
+
+   --alt-rnbw-grad: repeating-radial-gradient(rgba(0, 0, 0, .75) 10%, rgba(255, 255, 255, .25) 20%, rgba(0, 0, 0, .75) 30%), repeating-radial-gradient(#e509a099 17%, goldenrod 23%, #00ccbb99 37%, #73198399 62%, #b500b599 73%);
+
+   --btn-grad: radial-gradient(ellipse at left center, rgba(242, 242, 242, 0.83) 42%, rgba(173, 173, 173, 0.53) 88%), linear-gradient(242deg, rgba(242, 242, 242, 0.62) 17%, rgba(138, 138, 138, 0.62) 88%), linear-gradient(137deg, transparent, #b500b599, transparent, #73198399, transparent, #00ccbb99, transparent);
+
+   --h-bg-grad: linear-gradient(108deg, rgba(0, 242, 183, .22) 17%, rgba(202, 0, 242, .22) 42%, rgba(183, 0, 137, .22) 88%);
+
+   --lnk-bg-grad: linear-gradient(88deg, #b500b599, #00bbcc99, violet, #b500b599, #00bbcc99), linear-gradient(137deg, transparent, #b500b599, transparent, #73198399, transparent, #00bbcc99, transparent);
+
+   --epic-grad: linear-gradient(202deg, transparent, #b500b599, transparent, #73198399, transparent, #00bbcc99, transparent), linear-gradient(108deg, #73198399, #00bbcc99, #b500b599), var(--g), radial-gradient(ellipse at center, #b500b599, #73198399, #00bbcc99), var(--lnk-bg-grad), var(--g-lin);
+
+   --sptlgt-grad: radial-gradient(ellipse at top center, rgba(42, 42, 42, 0.42), rgba(183, 183, 183, 0.73));
+
+   --neon-grad: linear-gradient(42deg, var(--neon-blue-ish), var(--neon-purps-ish), var(--neon-green-ish), var(--neon-cyan-ish));
+
+   --gg-grad: var(--h-bg-grad),var(--epic-grad), var(--btn-grad);
+
+   --brdr-img: linear-gradient(108deg, transparent,var(--neon-mgnta-ish), transparent, var(--neon-green-ish), transparent, var(--neon-purps-ish), transparent, var(--neon-blue-ish)) 1;
+
+/* BG Variables */
+   --bg: light-dark(var(--lgtr, #cccccc88), var(--drkr, #38383888));
+
+   --bg-alt: light-dark(var(--lgt, #cccccce0), var(--drk, #383838e0));
+
+/* Image BGs */
+   --texchure: url('https://transparenttextures.com/patterns/paper-fibers.png');
+   --grph-ppr: url("https://transparenttextures.com/patterns/old-mathematics.png");
+   --texture: url("./img/black-paper.png");
+   --textured: url("./img/texture.png");
+
+
+/* Img + Grad Textured Surfaces */
+   --surface: var(--texchure), var(--surface-color), var(--texture);
+   --surfaced-g-clrs: var(--texchure) var(--g-clrs), var(--g-con), var(--g-lin);
+   --surface-color: light-dark(var(--lgt), var(--drk));
+   --surfaced: var(--surface-alt), var(--g-lin), var(--g-clrs);
+   --surface-alt: var(--texture), var(--g), var(--textured);
+   --surface-ppr: var(--grph-ppr), var(--texture), var(--texchure), var(--textured);
+   --surface-grph: var(--grph-ppr), var(--surface-alt);
+   --surface-sptlgt: var(--texchure), var(--texture), var(--sptlgt-grad);
+   --surfaced-alt: var(--textured), var(--epic-grad), var(--texchure), var(--texture);
+
+
+   --blend-mode: overlay;
+
+
+   --emo-winky: U+1F609;/*-- 😉 --*/
+   --emo-wow: U+1F92F; /*-- 🤯 --*/
+
+
+/* Eazy Peazing */
+   --shpeaze: linear(0, 0.0025 1.75%, 0.0099 3.55%, 0.0341 6.4%, 0.0738 9.06%, 0.1281 11.41%, 0.194 13.37%, 0.2714 14.97%, 0.344 16.05%, 0.5443, 0.6604 20.61%, 0.7167 22.4%, 0.7653 24.59%, 0.8083 27.28%, 0.8448 30.42%, 0.8833 35.06%, 0.9155 40.62%, 0.9421 47.24%, 0.9633 54.99%, 0.9795 64.01%, 0.9909 74.43%, 0.9977 86.37%, 1);
+
+
+} /* --- (( -- end :root -- )) --- */
+
+
+@media not (prefers-reduced-motion) {
+:root {
+     --scale: 0.1;
+     }
+}
+
+
+/* Defaults */
+
+   ::selection {
+      color: var(--drk);
+      background: var(--lgt);
+   }
+
+
+
+
+      /* Global Styles */
+   * {
+      box-sizing: border-box;
+      margin: 0 0;
+      padding: 0 0;
+      -webkit-user-select: none;
+      transform-style: preserve-3d;
+      transition-behavior: allow-discrete;
+      transition: all var(--trans-time, .3s);
+   }
+
+
+   html {
+      height: 100vh;
+      width: 100vw;
+      margin: 0 auto;
+      padding: .125rem;
+      border: 3px solid transparent;
+      border-image:var(--neon-grad) 1;
+      box-shadow: 0 0 17px rgba(0,255,0,.7), 0 0 23px rgba(0,121,121,.7);
+      scroll-behavior: smooth;
+      z-index: 0;
+   }
+
+   body::before {
+      content: '';
+      inset: 0;
+      border: 3px solid transparent;
+      border-image: bar(--brdr-img);
+      z-index: -1;
+   }
+
+   body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      max-width: 100%;
+      gap: 1rem;
+      line-height: 1.618;
+      margin: 0;
+      padding: 0;
+      color: var(--txt);
+      text-shadow: var(--txt-shad);
+      overflow-x: clip;
+      z-index: 0;
+      min-block-size: 100vh;
+      border: 5px solid transparent;
+      container-type: inline-size;
+      container-name: body;
+      position: fixed;
+      inset: 0;
+      overflow-y: auto;
+      overflow-x: clip;
+      font-size: var(--base-size);
+      font-family: var(--txt-font);
+      line-height: var(--ratio);
+      word-wrap: wrap;
+      text-wrap: balance;
+      color: var(--txt);
+      background-image: var(--surface);
+      background-color: transparent;
+      border-image: var(--neon-grad) 1;
+      background-clip: radial-gradient(circle, var(--lgt-ish), var(--drk-ish));
+      background-blend-mode: var(--blend-mode, overlay);
+      scroll-behavior: smooth;
+      transform-style: preserve-3d;
+      interpolate-size: allow-keywords;
+      transition-behavior: allow-discrete;
+      transition: all var(--trans-time) var(--shpeaze);
+      }
+
+
+      header, footer {
+         display: block;
+         position: relative;
+         inset: 0;
+         width: 100%;
+         padding: .25rem;
+         margin: 0 auto;
+         text-shadow: var(--txt-shad);
+         overflow-x: clip;
+         border: 2px solid transparent;
+         border-image: var(--brdr-img);
+         border-bottom: 5px solid transparent;
+         background-color: transparent;
+         background-blend-mode: overlay;
+         backdrop-filter: brightness(.5) contrast(.7)  saturate(.5);
+         z-index: 1;
+      }
+
+
+      header::before, footer::before {
+         content: '';
+         display: block;
+         position: absolute;
+         inset: 0;
+         top: 50%;
+         left: 50%;
+         max-width: 100%;
+         max-height: 100%;
+         margin: 0 0;
+         padding: 0 0;
+         text-shadow: var(--txt-shad);
+         border: 3px solid transparent;
+         border-image: linear-gradient(108deg, transparent,var(--neon-mgnta-ish), transparent, var(--neon-green-ish), transparent, var(--neon-purps-ish), transparent, var(--neon-blue-ish)) 3;
+         z-index: -1;
+      }
+      
+      header::after, footer::after {
+         content: '🍲';
+         display: block;
+         position: absolute;
+         inset: 0;
+         top: 0%;
+         left: 0%;
+         text-shadow: var(--txt-shad);
+         border: 5px inset transparent;
+         border-image: var(--brdr-img);
+         filter: saturate(.5) brightness(.5) contrast(.5) blur(7px);
+         transform: translate3d(0%, 0%,-20%) scale(500%);
+         z-index: -1;
+      }
+
+      header::before, footer::before {
+         content: '🥪';
+         display: block;
+         position: absolute;
+         inset: 0;
+         top: 50%;
+         left: 50%;
+         text-shadow: var(--txt-shad);
+         border: 5px inset transparent;
+         border-image: var(--brdr-img);
+         z-index: -1;
+         filter: saturate(.5) brightness(.5) contrast(.5);
+         transform: translate3d(50%, -50%,0) scale(300%);
+      }
+
+      h1, h2, h3, h4, h5, h6, summary, legend {
+         font-family: var(--h-font-alt);
+         font-size-adjust: .88%;
+         color: var(--h);
+         text-shadow: var(--txt-shad);
+         line-height: 1.1618;
+         background-blend-mode: difference;
+      }
+
+        main {
+            padding: var(--spacing);
+            max-width: 95vw;
+            margin: 0 auto;
+            background-color: transparent;
+            margin-bottom: .5rem;
+        }
+
+        article, .container {
+            margin: var(--spacing) auto;
+            padding: var(--spacing);
+            border: 1px solid var(--acc);
+            border-radius: .25rem;
+            max-width: 100%;
+            margin-bottom: .5rem;
+        }
+
+        /* Comparison styles */
+        section, .wrapper {
+            display: grid;
+            width: 100%;
+            gap: calc(var(--spacing) * .5)
+            margin: calc(var(--spacing) * .5) auto;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr));
+            margin-bottom: .5rem;
+        }
+
+        section h2, .container h2, article h3, .card-title h3 {
+           display: inline-block;
+           text-wrap: balance;
+           font-weight: 700;
+        }
+
+        details {
+           background-color: var(--bg);
+           display: block;
+           width: 100%;
+           transform-style: preserve-3d;
+           transition-behavior: allow-discrete;
+           transition: all .3s var(--shpeaze, ease-in-out);
+           margin-bottom: .5rem;
+           padding: .25rem .5rem;
+        }
+
+         summary, summary > * {
+            display: inline;
+            vertical-align: center;
+            width: 100%;
+            padding: .25rem .5rem;
+            word-wrap: no-wrap;
+
+            h1, h2, h3, h4, h5, h6 {
+               color: var(--acc-alt);
+               text-shadow: var(--txt-shad);
+            }
+         }
+
+         summary::marker, is(::marker), ::before {
+            display: inline;
+            position: absolute;
+            inset: 0;
+            content: initial;
+            transition: all .2s ease-in-out;
+         }
+
+         details[open] summary {
+            background: none;
+            color: var(--bg);
+         }
+         
+         details[open] details[open] summary {
+            color: var(--acc-alt);
+         }
+
+
+         ::details-content {
+            interpolate-size: allow-keywords;
+            transition: height 0.5s ease-in-out allow-discrete;
+            height: 0;
+            overflow: clip;
+         }
+
+         ::details-content[open], details p {
+            margin-block: .5rem;
+            padding-block: .5rem;
+         }
+
+         /* Browser supports interpolate-size */
+         @supports (interpolate-size: allow-keywords) {
+            :root {
+               interpolate-size: allow-keywords;
+               transition-behavior: allow-discrete;
+               transition all .3s ease;
+            }
+         
+            [open]::details-content {
+               height: auto;
+            }
+         }
+
+
+
+
+
+         ul li::marker {
+            content: ' - ';
+            padding: .25rem;
+         }
+
+
+        /* Code display */
+        pre, details, fieldset {
+            background: var(--acc);
+            color: var(--bg);
+            padding: var(--spacing);
+            border: 3px double var(--txt);
+            border-radius: .25rem;
+            margin-block: 1rem;
+            padding: .75rem;
+            z-index: 1;
+        }
+        
+        pre {
+           height: auto;
+           overflow-x: scroll;
+           background-color: var(--bg-alt);
+        }
+
+        code {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9em;
+            background-color: var(--bg);
+            color: var(--txt);
+            padding: .5rem;
+        }
+
+        /* Interactive elements */
+       .accordion-icon {
+            display: inline-block;
+            height: 1ch;
+            width: 1ch;
+            transition: none;
+      }
+      
+      .accordion-title, summary, detail + summary > * {
+         font-family: var(--h-font-alt);
+         background-color: var(--bg);
+         color: var(--acc);
+         padding: .5rem 1rem;
+         margin-block-end: 1rem;
+         width: 100%;
+      }
+
+      blockquote {
+         position: relative;
+         padding: 2rem;
+         margin: 2rem 0;
+         margin-bottom: .5rem;
+         font-family: var(--txt-hand);
+         background: rgba(0,0,0,0.3);
+         border-left: 5px solid var(--neon-cyan-ish);
+         transition: all 0.3s ease;
+      }
+
+      blockquote::before,
+      blockquote::after {
+         content: ' " ';
+         font-family: serif;
+         font-size: 4rem;
+         white-space: ;
+         color: var(--neon-#00bbcc99);
+         opacity: 0.3;
+         position: absolute;
+         animation: float 2s linear infinite;
+         transition: all 0.3s ease;
+      }
+
+      blockquote::before {
+         color: var(--acc);
+         top: -1rem;
+         left: 1rem;
+      }
+
+      blockquote::after {
+         color: var(--acc);
+         bottom: -2rem;
+         right: 1rem;
+      }
+
+      blockquote:hover {
+         border-left-color: var(--neon-purps);
+         box-shadow: 0 0 20px rgba(0,255,255,0.1);
+      }
+
+      blockquote:hover::before,
+      blockquote:hover::after {
+         color: var(--ter);
+         opacity: 0.5;
+         transform: scale(1.1);
+      }
+
+
+     /* Example component styles */
+    /* Figures */
+   .card, figure {
+      display: block;
+      max-width: 95%;
+      height: fit-content;
+      background-color: var(--bg-alt);
+      background-size: contain;
+      color: var(--txt-alt);
+      padding: var(--spacing);
+      border-radius: 4px;
+      margin: 0 aauto
+      padding: 5px;
+      box-shadow: 1px 1px 3px 5px var(--drk-ish);
+      margin-inline: 0;
+      overflow: hidden;
+      overflow-y: scroll;
+      z-index: 3;
+
+      img {
+         width: 100%;
+         height: auto;
+         aspect-ratio: preserve;
+         max-height: 50vh;
+         z-index: 4;
+      }
+
+ }
+
+   figure img, .card-image-container {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: .5rem;
+        object-fit: contain;
+        padding: 5px;
+  }
+
+     .card-title, figure h4, article h4 {
+        display: block;
+        color: rgb(0,0,34);
+        font-size: 18.4px;
+        font-weight: 700;
+        text-wrap: stable;
+     }
+
+
+   p:not(details p), strong {
+      margin-block: .5rem;    
+      background-blend-mode: difference;
+      filter: invert(100%);
+      color: var(--acc-alt);
+      background-color: transparent;
+      backdrop-filter: invert(100%);
+
+   }
+
+    </style>
+</head>
+<body>
+
+
+    <header>
+        <h1>Semantic HTML vs Div Soup: A Tale of Two Approaches</h1>
+        <p>"Nothing pisses me off more than opening the source and finding just a mountain of div soup sandwiches..." - B</p>
+    </header>
+
+
+
+    <main>
+        <section>
+            <h2>The Problem with the 🥪 &lt;Div&gt; Soup Sandwich 🥪</h2>
+            <blockquote>
+                <p>To me, this is the equivalent of being in the real world and having a collection of marbles or tchotchkes or knickknacks, and then to store it you put it in a jar and then so you don't forget what you put in your glass jar, you make a label by writing on a piece of tape to stick to the jar, but - then instead of writing 'knickknacks' or 'tchotchkies' - you write 'jar' on the jar... to label the jar! That's idiotic! -and not helpful, and pointless!</p>
+                <footer>- B, on <cite>the absurdity of the &lt;div&gt; soup sandwich</cite></footer>
+            </blockquote>
+        </section>
+
+        <section>
+           <article>
+              <h3>the 🥪Div🥪 Approach:</h3>
+              <div class="card">
+                   <div class="card-image-container">
+                      <img src="/api/placeholder/400/300" alt="Example image">
+                  </div>
+                  <div class="card-content">
+                      <div class="card-title">A Simple Card</div>
+                      <div class="card-description">Look at all these meaningless divs!</div>
+             </div>
+
+             <details>
+                <summary>View Code</summary>
+                  <pre><code>&lt;div class="card"&gt;
+    &lt;div class="card-image-container"&gt;
+        &lt;img src="..." alt="Example image"&gt;
+    &lt;/div&gt;
+    &lt;div class="card-content"&gt;
+        &lt;div class="card-title"&gt;A Simple Card&lt;/div&gt;
+        &lt;div class="card-description"&gt;
+            Look at all these meaningless divs!
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </details>
+            </article>
+
+            <article>
+                <h3>Semantic HTML Approach</h3>
+                <figure>
+                    <img src="/api/placeholder/400/300" alt="Example image">
+                    <figcaption>
+                        <h4>A Simple Card</h4>
+                        <p>Using semantic elements that describe their purpose!</p>
+                    </figcaption>
+                </figure>
+
+                <details>
+                    <summary>View Code</summary>
+                    <pre><code>&lt;figure&gt;
+    &lt;img src="..." alt="Example image"&gt;
+    &lt;figcaption&gt;
+        &lt;h4&gt;A Simple Card&lt;/h4&gt;
+        &lt;p&gt;Using semantic elements that describe their purpose!&lt;/p&gt;
+    &lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+                </details>
+            </article>
+        </section>
+
+        <section>
+            <h2>Why Semantic HTML is Better</h2>
+
+            <ol>
+               <li>
+            <details>
+                <summary><h4>Self-Documenting</h4></summary>
+                <p>Semantic elements tell you what they are and what they do. No need for cryptic class names or excessive documentation.</p>
+            </details>
+               </li>
+               <li>
+            <details>
+                <summary><h4>Built-in Functionality</h4></summary>
+                <p>Elements like <code>&lt;details&gt;</code>, <code>&lt;dialog&gt;</code>, and <code>&lt;figure&gt;</code> come with native behaviors and accessibility features.</p>
+            </details>
+               </li>
+               <li>
+            <details>
+                <summary><h4>Better Accessibility</h4></summary>
+                <p>Screen readers and assistive technologies understand semantic HTML. No need for extra ARIA attributes or JavaScript.</p>
+            </details>
+               </li>
+               <li>
+            <details>
+                <summary><h4>Improved Performance</h4></summary>
+                <p>Less code, fewer DOM nodes, and native functionality means better performance without JavaScript overhead.</p>
+            </details>
+               </li>
+            </ol>
+        </section>
+
+        <section>
+           <article>
+            <h2>The Power of Thinking First</h2>
+            <blockquote>
+                <p>I prefer the type of low effort that is well considered, and well informed! ...and enables me to create a far better product with my little effort that EVERYONE can enjoy and is both beautiful, and performant.</p>
+                <footer>- B, on <cite>thoughtful development</cite></footer>
+            </blockquote>
+            <p>Using semantic HTML DOES require SOME thinking about structure and meaning <i>*before*</i> diving into code. This upfront investment, however, consistently pays dividends in:</p>
+            <ul>
+                <li>Clearer code organization</li>
+                <li>Better maintainability</li>
+                <li>Enhanced accessibility</li>
+                <li>Improved performance</li>
+            </ul>
+         </article>
+        </section>
+    
+        <section>
+           <article>
+            <h1>Part 2: Recreating What Already Exists</h1>
+            <blockquote>
+                <p>"HTML5 semantic elements got introduced like 16 years ago!! To me, there is literally NO excuse for not using them at this point. I mean.. unless your excuse is: 'I'm lazy and I don't care!' In that case, fuck it- by all means, knock yourself out!"</p>
+                <footer>- B, on <cite>unnecessary complexity</cite></footer>
+            </blockquote>
+         </article>
+      </section>
+         <section>
+            <details>
+               <summary>
+               <strong>The &lt;div&gt; 🥪 Way AKA:</strong> <h2>"Probably Broken"</h2></summary>
+               <p>Div class of wrapper + div class of container + div class of accordion-wrapper + div class of accordion-container + div class of accordion-item, etc.., etc..! This implementation has <em>10+ potential points of failure!</em>
+               </p>
+            
+            <article>
+               <!-- Div soup accordion -->
+               <div class="accordion-wrapper">
+                  <div class="accordion-container">
+                     <div class="accordion-item">
+                        <div class="accordion-trigger" aria-expanded="false"><span class="accordion-icon">></span> <span class="accordion-title">Click to expand</span>
+                        </div>
+                        <div class="accordion-content">
+                           <p>Here's some content that could have been shown much more simply...</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <details>
+                  <summary>View HTML<br> (38 lines)</summary>
+                     <pre><code>&lt;div class="accordion-wrapper"&gt;
+    &lt;div class="accordion-container"&gt;
+        &lt;div class="accordion-item"&gt;
+            &lt;button 
+                class="accordion-trigger" 
+                aria-expanded="false"
+            &gt;
+                &lt;span class="accordion-title"&gt;
+                    Click to expand
+                &lt;/span&gt;
+                &lt;span class="accordion-icon"&gt;
+                    ▼
+                &lt;/span&gt;
+            &lt;/button&gt;
+            &lt;div class="accordion-content"&gt;
+                &lt;p&gt;Here's some content...&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                    </details>
+
+                    <details>
+                       <summary>View CSS<br>(42 lines)</summary>
+                       <pre><code>.accordion-wrapper {
+    width: 100%;
+}
+
+.accordion-container {
+    border: 1px solid var(--txt);
+    border-radius: 4px;
+}
+
+.accordion-item {
+    position: relative;
+}
+
+.accordion-trigger {
+    width: 100%;
+    text-align: left;
+    padding: 1rem;
+    border: none;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.accordion-icon {
+    transition: transform 0.3s ease;
+}
+
+.accordion-trigger[aria-expanded="true"] 
+.accordion-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    display: none;
+    padding: 0 1rem;
+}
+
+.accordion-content.active {
+    display: block;
+    padding: 1rem;
+}</code></pre>
+                    </details>
+
+                    <details>
+                       <summary>View JavaScript<br>(25 lines)</summary>
+                       <pre><code>document.querySelectorAll('.accordion-trigger')
+    .forEach(trigger => {
+        trigger.addEventListener('click', () => {
+            const content = trigger.nextElementSibling;
+            const isExpanded = 
+                trigger.getAttribute('aria-expanded') 
+                === 'true';
+            
+            // Toggle aria-expanded
+            trigger.setAttribute(
+                'aria-expanded', 
+                !isExpanded
+            );
+            
+            // Toggle content visibility
+            content.classList.toggle('active');
+            
+            // Manage focus for accessibility
+            if (!isExpanded) {
+                content.setAttribute(
+                    'tabindex', 
+                    '0'
+                );
+                content.focus();
+            }
+        });
+    });</code></pre>
+                   </details>
+
+                    <h5>Total:</h5><p>105 lines of code!</p>
+                </details>
+             </article>
+         </section>
+
+
+
+         <section>
+                <details><summary>
+                   <strong>The Tac#m Way, AKA:</strong><h2>"The Elegant Way"</h2></summary>
+<!-- Native details/summary -->
+                  <p>Just using the right element for the job (and forget all that other BS)!</p>
+             <article>
+                   <details>
+                      <summary>View Complete Code - HTML + CSS + JS (6 lines!!)</summary>
+                        <pre><code>&lt;details&gt;
+    &lt;summary&gt;Click to expand&lt;/summary&gt;
+    &lt;p&gt;Just using the right element 
+       for the job!&lt;/p&gt;
+&lt;/details&gt;</code></pre>
+                    </details>
+
+                  <details style="margin-top: 2rem">
+                     <summary><h4>Benefits of the Semantic Approach:</h4></summary>
+                        <ul>
+                            <li>Built-in accessibility (no ARIA needed)</li>
+                            <li>Native keyboard support</li>
+                            <li>Hardware-accelerated animations</li>
+                            <li>No JavaScript overhead</li>
+                            <li>Maintains state automatically</li>
+                            <li>Works without any styling</li>
+                            <li><em>99 fewer lines of code!</em></li>
+                        </ul>
+                    </details>
+                    <p>Okay.. so, that's all good - but what about maintenance?!</p>
+                 </details>
+             </article>
+
+        </section>
+
+        <section>
+           <article>
+            <h2>The Reliability Factor</h2>
+            <blockquote>
+                <p>"Want to see something funny? Our 'overengineered' example above is statistically probably broken right now! Meanwhile, the semantic version just... works. Every time. That's not incidental (though, incidenally accidental in this case)- it's the whole point!"</p>
+                   <footer>- Claude, on <cite>helping to write this article</cite></footer>
+            </blockquote>
+         </article>
+
+            <article>
+               <details>
+                  <summary>
+            <h3>Points of Failure in the Overengineered Approach:</h3></summary>
+
+            <details>
+                <summary><h3>JavaScript Failures<br>(4 points)</h3></summary>
+                <ul><h4>Points of JS Failure:</h4>
+                    <li>Script might fail to load entirely</li>
+                    <li>Event listeners might not attach properly</li>
+                    <li>Element selection might fail due to class mismatches</li>
+                    <li>State management might get corrupted</li>
+                </ul>
+            </details>
+
+
+            <details>
+                <summary><h3>CSS Failures<br>(3 points)</h3></summary>
+                <ul><h4>Points of CSS Failure:</h4>
+                    <li>Transitions might break or glitch</li>
+                    <li>Height calculations might be wrong</li>
+                    <li>Class toggling might fail</li>
+                </ul>
+            </details>
+
+
+            <details>
+                <summary><h3>Accessibility Failures<br>(3 points)</h3></summary>
+                <ul><h4>Accessibility Points of Failure:</h4>
+                    <li>ARIA attributes might be incorrect</li>
+                    <li>Keyboard navigation might break</li>
+                    <li>Focus management might fail</li>
+                </ul>
+            </details>
+
+         </details>
+
+         </article>
+
+
+         <article>
+
+            <details><summary>
+            <h3>Points of Failure in the Semantic Approach:</h3></summary>
+            
+               <figure>
+                   <pre><code>0</code></pre><br>
+                   <figcaption>
+                   If the element exists in the DOM, <em>it works</em>.
+                   </figcaption>
+               </figure>
+               <p><em>That's it.</em><br><br>That's the whole implementation.</p>
+            </details>
+
+         </article>
+
+
+      </section>
+
+
+
+
+      <section>
+         <article>
+         <h2>Low Effort: a Concept that Goes Both Ways</h2>
+
+            <blockquote>
+                <p>"I prefer the type of low effort that is well considered, and well informed! ...and enables me to create a far better product with my little effort that EVERYONE can enjoy and is both beautiful, and performant."</p>
+                   <footer>- B, on <cite>qualitative "low effort" varieties.</cite></footer>
+            </blockquote>
+         </article>
+
+            <aside id="modern-dev">
+               <h2>Modern Dev</h2><br><br>
+                <h4>A Note on "Modern" Development</h4><br>
+                <p>Often, developers recreate native functionality because they:</p>
+                <ul>
+                    <li>Don't know these elements exist</li>
+                    <li>Think custom solutions are more "modern"</li>
+                    <li>Want more styling control</li>
+                    <li>Are following outdated patterns</li>
+                </ul>
+                <p>But here's the truth: The most modern approach is using the platform's built-in features. They're:</p>
+                <ul>
+                    <li>Constantly improved by browser vendors</li>
+                    <li>Tested across millions of users</li>
+                    <li>Optimized for performance</li>
+                    <li>Built with accessibility in mind</li>
+                </ul>
+            </aside>
+
+        </section>
+
+    </main>
+
+
+   <footer>
+        <p>Hand-Coded, with 💕, by a human being (with help from AI (😉, thanks Claude!!)).</p>
+        <p class="copy" >&copy;2024 <a href="http://www.epicwinpromedia.com/">EPIC WIN Pro Media</a>, All Rights Reserved </p>
+    </footer>
+
+
+    <script>
+   document.querySelectorAll('.accordion-trigger').forEach(trigger => {
+    // Set initial state
+    trigger.setAttribute('aria-expanded', 'false');
+    const content = trigger.nextElementSibling;
+    content.style.display = 'none';
+    
+    trigger.addEventListener('click', () => {
+        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+        const icon = trigger.querySelector('.accordion-icon');
+
+        // Toggle aria-expanded state
+        trigger.setAttribute('aria-expanded', (!isExpanded).toString());
+
+        // Toggle content visibility
+        content.style.display = !isExpanded ? 'block' : 'none';
+
+        // Toggle icon rotation
+        icon.style.transform = !isExpanded ? 'rotate(90deg)' : 'rotate(0deg)';
+    });
+});
+
+    </script>
+</body>
+</html>
