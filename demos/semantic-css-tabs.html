@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <title>ZERO JS Accessible Semantic Tabs: a Pure CSS Tac-Em Design Demo Snippet</title>
+      <style>
+        /* --- ALL THE CSS FROM THE PREVIOUS VERSION GOES HERE --- */
+        /* Including the refined 'section pre' styles above */
+:root {
+
+/* --- Web-Standard Defs --- */
+
+   color-scheme: dark light; /* Dark preferred */
+   accent-color: var(--acc);
+   font-size: var(--f-size);
+
+/* Color Defs */
+   --wht: #fff;
+   --wht-ish: rgba(242,242,242, .86);
+   --lgtr: #eee;
+   --lgt: #ccc;
+   --mid: #888;
+   --drk: #333;
+   --drkr: #111;
+   --blk-ish: rgba(27, 27, 27, .94);
+   --blk: #000;
+
+
+/* Color Role Assignments */
+   --base-glow: rgba(0, 242, 242, 0.42);
+   --bg: light-dark(var(--lgtr), var(--drkr));         /* Page background */
+   --bg-alt: light-dark(var(--lgt), var(--drk));        /* Inactive Tab background AND Pre BG */
+   --txt: light-dark(var(--drk), var(--lgt));           /* Default text */
+   --txt-alt: light-dark(var(--drkr), var(--lgtr));
+   --pnl: light-dark(var(--lgt), var(--drk));           /* Panel background  */
+   --brdr: var(--mid);
+   --acc: light-dark(#b500b5, #00ccbb);
+   --acc-ish: light-dark(#b500b599, #00ccbb99);
+   --acc-alt: light-dark(#00ccbb, #731983);
+   --acc-alt-ish: light-dark(#00ccbb99, #73198399);
+   --bx-shad: 3px 3px 7px -5px light-dark(rgba(0, 0, 0, 0.7), rgba(183, 183, 183, 0.7));
+   --txt-shad: .5px .5px .25px var(--wht), -.5px -.5px .25px var(--blk);
+   --text-shad: .5px .5px .5px var(--wht), -.75px -.75px .5px var(--blk);
+
+   /* Text */
+   font-size: var(--txt-size);
+   line-height: 1.15;
+   --h: var(--acc);
+   --h-font: 'Orbitron', Sans-Serif;
+   --txt-font: 'Special Elite', Sans-Serif;
+
+   --txt-size: clamp(1rem, 4vw, 2.2rem);
+} /* END :root */
+
+
+* {
+   box-sizing: border-box;
+   padding: 0 0;
+   margin: 0 auto;
+}
+
+html {
+   position: fixed;
+   inset: 0;
+   height: 100vh;
+   width: 100vw;
+   overflow: clip;
+   background-color: var(--bg);
+   color: var(--txt);
+}
+
+body {
+   display: flex;
+   position: relative;
+   flex-direction: column;
+   height: 100%;
+   width: 100%;
+   max-width: 100vw;
+   min-height: 100vh;
+   line-height: 1.618;
+   padding: 1rem;
+   overflow-x: clip;
+   overflow-y: auto;
+   scroll-margin-block-end: 1rem;
+   font-size: var(--txt-size);
+}
+
+header, footer {
+   padding: .5rem;
+   text-align: center;
+   flex-shrink: 0;
+}
+
+footer nav ul {
+   display: flex;
+   flex-direction: row;
+   justify-content: center; /* Center footer links */
+}
+footer nav li {
+    margin: 0 0.5em; /* Space footer links */
+}
+
+main {
+   flex-grow: 1;
+   padding: 1rem 0.5rem;
+   width: 100%;
+   max-width: 90vw;
+}
+
+nav[role='tablist'] {
+   display: flex;
+   box-shadow: var(--bx-shad);
+   background-color: transparent; /* Ensure nav itself is transparent */
+   width: 100%;
+   max-width: 85vw;
+   max-height: 70vh; /* Increased max height slightly */
+   margin: 0 auto;
+}
+
+nav ul {
+   list-style: none;
+}
+
+section h3 {
+    margin-bottom: 0.5em;
+    padding: 0;
+    color: var(--txt);
+    text-shadow: var(--text-shad);
+}
+
+/* --- Code Block Styling --- */
+section pre {
+   display: block;
+   flex-grow: 1;
+   min-height: 0;
+   height: 100%;
+   min-width: 0;
+   color: var(--txt);
+   max-height: calc(70vh - 10em);  /*Approximate calculation */
+   padding: 0.75em;
+   margin: .5rem;
+   border: 3px inset var(--bg-alt);
+   background-color: var(--bg);
+   text-shadow: none;
+   box-shadow: none;
+   white-space: pre;   /* Preserve whitespace AND prevent wrapping */
+   overflow: scroll;
+   font-family: monospace;
+   font-size: 0.8rem;
+   line-height: 1.4;
+}
+
+/* --- Layout using CSS Grid --- */
+nav[role='tablist'] {
+   display: grid;
+   grid-template-rows: auto 1fr; /* Keep this */
+   grid-template-columns: auto auto; /* Adjust if more tabs */
+}
+
+nav[role='tablist'] > label[role='tab'] {
+    grid-row: 1;
+}
+
+nav[role='tablist'] > label[role='tab']:nth-of-type(1) {
+    grid-column: 1;
+}
+
+nav[role='tablist'] > label[role='tab']:nth-of-type(2) {
+    grid-column: 2;
+}
+
+
+/* --- Panel Styling & Placement --- */
+[role='tabpanel'] {
+   visibility: hidden;
+   grid-row: 2;
+   grid-column: 1 / -1; /* Span all columns */
+   width: 100%; /* Keep this as it fixed the earlier issue */
+   /* min-height: 10em; /* Remove min-height if max-height is calculated */
+   max-width: 90vw;
+   height: 100%; /* Let it fill the grid row */
+   background-color: var(--pnl);
+   color: var(--txt);
+   border: 3px ridge var(--brdr);
+   padding: 1em;
+   z-index: 1; /* Lower than tabs */
+   display: flex; /* Use flexbox to control inner content flow */
+   flex-direction: column; /* Stack heading and pre vertically */
+   overflow: clip;
+}
+
+/* --- Tab Control Styling --- */
+[role='tab'] {
+   cursor: pointer;
+   position: relative;
+   padding: 0.5em 1em;
+   margin-inline: 1px;
+   margin-bottom: -3px; /* Overlap slightly */
+   border: 2px ridge var(--brdr);
+   border-bottom: 3px solid transparent; /* Make transparent initially */
+   border-radius: 0.5em 0.5em 0 0;
+   background-color: var(--bg);
+   color: var(--txt);
+   text-align: center;
+   line-height: 1.5;
+   font-size: 1rem;
+   font-weight: 200;
+   transform-style: preserve-3d;
+   transform: scale(.98);
+   transition: all .1s ease;
+   user-select: none;
+   -webkit-tap-highlight-color: transparent;
+   z-index: 1; /* Below active tab */
+}
+
+/* --- CORE TacEm Logic & Active State Styling --- */
+[role='tab']:has(input:checked) + [role='tabpanel'] {
+   visibility: visible;
+   z-index: 2; /* Bring active panel content area forward */
+}
+
+[role='tab']:has(:checked) {
+   /* margin-bottom: -3px; /* Already applied above */
+   background-color: var(--pnl); /* Active BG matches panel */
+   border-color: var(--brdr);
+   border-bottom-color: var(--pnl); /* Hide bottom border effectively */
+   font-weight: 500;
+   text-shadow: var(--txt-shad);
+   transform: scale(1.01);
+   z-index: 3; /* Active tab is topmost */
+}
+
+/* Accessibility: Focus styles */
+[role='tab']:focus-visible {
+   outline: 3px groove var(--acc);
+   outline-offset: -3px;
+   z-index: 4; /* Focus is above everything */
+}
+      </style>
+   </head>
+<body>
+
+<header><h1>Tac-Em Design Patterns Demo</h1><h2>Using Radio Buttons for State</h2>
+</header>
+
+<main>
+   <nav role="tablist" aria-label="Tabbed Content Sections">
+
+      <label for="sec1-tgl" role="tab" id="sec1-lbl" aria-controls="sec1">
+         HTML
+         <input type="radio" name="tabs-group" id="sec1-tgl" hidden checked>
+      </label>
+      <section id="sec1" role="tabpanel" aria-labelledby="sec1-lbl">
+         <h3>HTML for this Demo</h3>
+         <pre><code>&lt;nav role="tablist" aria-label="Tabbed Content Sections"&gt;
+
+  &lt;!-- Hidden Radio Inputs Manage State --&gt;
+  &lt;label for="sec1-tgl"
+     role="tab"
+     id="sec1-lbl"
+     aria-controls="sec1"&gt;
+  HTML
+  &lt;input type="radio"
+     name="tabs-group"
+     id="sec1-tgl"
+     hidden checked&gt;
+  &lt;/label&gt;
+  &lt;section id="sec1"
+     role="tabpanel"
+     aria-labelledby="sec1-lbl"&gt;
+     &lt;h3&gt;HTML for this Demo&lt;/h3&gt;
+     &lt;pre&gt;&lt;code&gt;... HTML code goes here ...&lt;/code&gt;&lt;/pre&gt;
+  &lt;/section&gt;
+  &lt;!-- END Section 1 --&gt;
+
+  &lt;label for="sec2-tgl"
+     role="tab"
+     aria-controls="sec2"&gt;
+  CSS
+  &lt;input type="radio"
+     name="tabs-group"
+     id="sec2-tgl" hidden&gt;
+  &lt;/label&gt;
+
+  &lt;section id="sec2"
+     role="tabpanel"
+     aria-labelledby="sec2-lbl"&gt;
+     &lt;h3&gt;CSS for this Demo&lt;/h3&gt;
+     &lt;pre&gt;&lt;code&gt;... CSS code goes here ...&lt;/code&gt;&lt;/pre&gt;
+  &lt;/section&gt;
+
+&lt;/nav&gt;</code></pre>
+      </section>
+      <!-- END Section 1 -->
+
+      <label for="sec2-tgl" role="tab" id="sec2-lbl" aria-controls="sec2">
+         CSS
+         <input type="radio" name="tabs-group" id="sec2-tgl" hidden>
+      </label>
+      <section id="sec2" role="tabpanel" aria-labelledby="sec2-lbl">
+         <h3>CSS for this Demo</h3>
+         <pre><code>/* CSS code will be dynamically inserted here */
+/* --- :root Definitions --- */
+:root {
+   color-scheme: dark light; /* Dark preferred */
+   accent-color: var(--acc);
+   font-size: var(--f-size);
+   /* ... Rest of :root */
+}
+
+/* --- Base Styles --- */
+* { box-sizing: border-box; padding: 0; margin: 0 auto; }
+html { /* ... html styles ... */ }
+body { /* ... body styles ... */ }
+header, footer { /* ... */ }
+main { /* ... */ }
+nav[role='tablist'] { /* ... */ }
+nav ul { /* ... */ }
+section h3 { /* ... */ }
+
+/* --- Code Block Styling --- */
+section pre {
+   color: var(--txt);
+   background-color: var(--bg-alt);
+   max-height: calc(70vh - 10em);
+   padding: 0.75em;
+   margin: 0;
+   border: 1px inset var(--brdr);
+   text-shadow: none;
+   box-shadow: none;
+   white-space: pre;
+   overflow: auto;
+   font-family: monospace;
+   font-size: 0.8rem;
+   line-height: 1.4;
+}
+
+/* --- Layout using CSS Grid --- */
+nav[role='tablist'] {
+   display: grid;
+   grid-template-rows: auto 1fr;
+   grid-template-columns: auto auto; /* Adjust if more tabs */
+   max-width: 80vw;
+   max-height: 70vh;
+}
+/* ... Specific tab column assignments ... */
+nav[role='tablist'] > label[role='tab']:nth-of-type(1) { grid-column: 1; grid-row: 1; }
+nav[role='tablist'] > label[role='tab']:nth-of-type(2) { grid-column: 2; grid-row: 1; }
+
+/* --- Panel Styling & Placement --- */
+[role='tabpanel'] {
+   visibility: hidden;
+   grid-row: 2;
+   grid-column: 1 / -1;
+   width: 100%;
+   height: 100%;
+   background-color: var(--pnl);
+   color: var(--txt);
+   border: 3px ridge var(--brdr);
+   padding: 1em;
+   z-index: 1;
+   display: flex;
+   flex-direction: column;
+}
+
+/* --- Tab Control Styling --- */
+[role='tab'] {
+   /* ... tab styles ... */
+   margin-bottom: -3px; /* Overlap */
+   z-index: 1;
+}
+
+/* --- CORE TacEm Logic & Active State Styling --- */
+[role='tab']:has(input:checked) + [role='tabpanel'] {
+   visibility: visible;
+   z-index: 2;
+}
+[role='tab']:has(:checked) {
+   /* ... active tab styles ... */
+   background-color: var(--pnl);
+   border-bottom-color: var(--pnl);
+   z-index: 3;
+}
+
+/* Accessibility: Focus styles */
+[role='tab']:focus-visible {
+   /* ... focus styles ... */
+   z-index: 4;
+}
+         </code></pre>
+      </section>
+      <!-- END Section 2 -->
+
+   </nav>
+</main>
+
+<footer>
+   <nav>
+      <ul>
+         <li><a href="#">arbitrary</a></li>
+         <li><a href="#">dummy</a></li>
+         <li><a href="#">links</a></li>
+      </ul>
+   </nav>
+   <p class="copy">&copy;2025 Tac-Em Design<br>c/o <a href="https://epicwinpromedia.com/">EPIC WIN Pro Media</a></p>
+</footer>
+
+</body>
+</html>
