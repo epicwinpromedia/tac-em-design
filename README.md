@@ -82,12 +82,12 @@ TacEm is not an npm package you install. It is a paradigm shift in how you read,
 
 In TacEm, we follow the **Self-Explanitorium** principle: *viewing source IS learning*. Before reading the philosophy, open the two living demonstrations in this repository and inspect their code:
 
-### 1. [The Semantic vs. `<div>` Showdown (`<details>` Dropdowns)](./demos/div-soup-vs-semantic-html/)
+### 1. [The Semantic vs. `<div>` Showdown (`<details>` Dropdowns)](./demos/semantic-css-tabs.html)
 Why write 40 lines of fragile JavaScript event listeners, state toggles, and `aria-expanded` synchronization on a soup of generic `<div>` tags when the browser already knows how to disclose content natively?
 * **What it shows:** A side-by-side comparison of legacy "Div Soup" dropdowns/accordions versus pure, native `<details>` and `<summary>` architecture enhanced with modern CSS.
 * **The Takeaway:** Native keyboard navigation, screen-reader announcements, and rock-solid state management in **0 lines of JavaScript**.
 
-### 2. [TacEm Semantic CSS-Only Tabs](./demos/semantic-css-tabs/)
+### 2. [TacEm Semantic CSS-Only Tabs](./demos/semantic-css-tabs.html/)
 Most developers reach for a framework component or a JS click-handler just to switch between tab panels. Why? "Selecting one exclusive option from a group" is a solved problem in HTML since 1995.
 * **What it shows:** A fully interactive, accessible, multi-panel tabbed interface powered entirely by semantic structure, native radio/stateholder patterns, and the CSS `:has()` relational selector.
 * **The Takeaway:** **Document Structure IS Application Behavior.** When state lives in the DOM, CSS becomes a reactive behavioral engine.
